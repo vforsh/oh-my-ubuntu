@@ -52,21 +52,21 @@ case $model_choice in
         read -p "Enter your OpenAI API key: " api_key
         read -p "Enter your OpenAI API URL (press Enter for default https://api.openai.com/v1): " api_url
         api_url=${api_url:-"https://api.openai.com/v1"}
-        config=$(echo $config | jq --arg key "$api_key" --arg url "$api_url" '. + {"openai_api_key": $arg.key, "openai_api_url": $arg.url}')
+        config="{\"openai_api_key\": \"$api_key\", \"openai_api_url\": \"$api_url\"}"
         ;;
     2)
         read -p "Enter your Anthropic API key: " api_key
-        config=$(echo $config | jq --arg key "$api_key" '. + {"anthropic_api_key": $arg.key}')
+        config="{\"anthropic_api_key\": \"$api_key\"}"
         ;;
     3)
         read -p "Enter your Google API key: " api_key
         read -p "Enter your Google API URL (press Enter for default https://generativelanguage.googleapis.com): " api_url
         api_url=${api_url:-"https://generativelanguage.googleapis.com"}
-        config=$(echo $config | jq --arg key "$api_key" --arg url "$api_url" '. + {"google_api_key": $arg.key, "google_api_url": $arg.url}')
+        config="{\"google_api_key\": \"$api_key\", \"google_api_url\": \"$api_url\"}"
         ;;
     4)
         read -p "Enter your Groq API key: " api_key
-        config=$(echo $config | jq --arg key "$api_key" '. + {"groq_api_key": $arg.key}')
+        config="{\"groq_api_key\": \"$api_key\"}"
         ;;
     *)
         print_error "Invalid selection"
