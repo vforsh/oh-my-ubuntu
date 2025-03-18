@@ -22,6 +22,37 @@ sudo apt update
 print_message "Installing Git..."
 sudo apt install -y git
 
+# Add git alias
+if ! grep -q "alias g='git'" ~/.bashrc; then
+    echo "# Git alias" >> ~/.bashrc
+    echo "alias g='git'" >> ~/.bashrc
+    print_message "Added 'g' alias for git in ~/.bashrc"
+fi
+
+# Configure Git aliases
+print_message "Configuring Git aliases..."
+git config --global alias.s "status"
+git config --global alias.c "commit"
+git config --global alias.co "checkout"
+git config --global alias.sw "switch"
+git config --global alias.cb "switch -c"
+git config --global alias.stl "stash list"
+git config --global alias.sta "stash apply"
+git config --global alias.std "stash drop"
+git config --global alias.ll "log --oneline"
+git config --global alias.rh "reset --hard"
+git config --global alias.cfg "config"
+git config --global alias.ec "config --global --edit"
+git config --global alias.pl "pull"
+git config --global alias.ps "push"
+git config --global alias.rb "rebase"
+git config --global alias.cp "cherry-pick"
+git config --global alias.m "merge"
+git config --global alias.rt "revert"
+git config --global alias.rf "reflog"
+git config --global alias.alias "!git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\     => \\2/' | sort"
+print_message "Git aliases configured successfully"
+
 # Set up Git completions
 print_message "Setting up Git completions..."
 if ! grep -q "source /usr/share/bash-completion/completions/git" ~/.bashrc; then
@@ -214,6 +245,20 @@ if ! grep -q 'export BUN_INSTALL="$HOME/.bun"' ~/.bashrc; then
     print_message "Added Bun to PATH in ~/.bashrc"
 fi
 
+print_message "Installing lazydocker..."
+# Create the installation directory if it doesn't exist
+mkdir -p "$HOME/.local/bin"
+
+# Download and run the lazydocker installation script
+curl -fsSL https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+
+# Add lazydocker alias if not already added
+if ! grep -q "alias lzd='lazydocker'" ~/.bashrc; then
+    echo "# lazydocker alias" >> ~/.bashrc
+    echo "alias lzd='lazydocker'" >> ~/.bashrc
+    print_message "Added 'lzd' alias for lazydocker in ~/.bashrc"
+fi
+
 print_message "Installation complete! 🎉"
 print_message "To use the new tools, either restart your terminal or run: source ~/.bashrc"
 
@@ -225,4 +270,5 @@ echo "fzf: $(fzf --version 2>/dev/null || echo 'Not installed')"
 echo "eza: $(eza --version 2>/dev/null || echo 'Not installed')"
 echo "zoxide: $(zoxide --version 2>/dev/null || echo 'Not installed')"
 echo "Starship: $(starship --version 2>/dev/null || echo 'Not installed')"
-echo "Bun: $(~/.bun/bin/bun --version 2>/dev/null || echo 'Not installed')" 
+echo "Bun: $(~/.bun/bin/bun --version 2>/dev/null || echo 'Not installed')"
+echo "lazydocker: $(lazydocker --version 2>/dev/null || echo 'Not installed')" 
