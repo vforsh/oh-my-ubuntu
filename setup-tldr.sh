@@ -7,14 +7,35 @@ echo "Setting up tealdeer (tldr)..."
 
 # Function to detect current shell
 detect_shell() {
-    # Get the parent process name of the current shell
-    local shell_path=$(ps -p $$ -o ppid= | xargs ps -p -o comm=)
-    local shell_name=$(basename "$shell_path")
+    # First try to get from $SHELL environment variable
+    if [ -n "$SHELL" ]; then
+        local shell_name=$(basename "$SHELL")
+        echo "$shell_name"
+        return 0
+    fi
     
-    # Remove any leading dash (login shells)
-    shell_name=${shell_name#-}
+    # If $SHELL is not set, try to detect from process
+    if [ -n "$BASH" ]; then
+        echo "bash"
+        return 0
+    elif [ -n "$ZSH_VERSION" ]; then
+        echo "zsh"
+        return 0
+    elif [ -n "$FISH_VERSION" ]; then
+        echo "fish"
+        return 0
+    fi
     
-    echo "$shell_name"
+    # If still not detected, check the parent process name
+    if ps -p $$ -o comm= 2>/dev/null | grep -q "bash"; then
+        echo "bash"
+    elif ps -p $$ -o comm= 2>/dev/null | grep -q "zsh"; then
+        echo "zsh"
+    elif ps -p $$ -o comm= 2>/dev/null | grep -q "fish"; then
+        echo "fish"
+    else
+        echo "unknown"
+    fi
 }
 
 # Function to install binary release
@@ -100,8 +121,9 @@ setup_autocompletions() {
             sudo curl -fsSL "${completion_base_url}/zsh_tealdeer" -o /usr/share/zsh/site-functions/_tldr
             echo "Zsh completions installed. They will be available in new shell sessions."
             ;;
-        *)
-            echo "Warning: Shell '$shell' not recognized or completions not available."
+        "unknown"|*)
+            echo "Warning: Could not detect shell type. Completions will not be installed."
+            echo "Supported shells are: bash, zsh, and fish"
             return 1
             ;;
     esac
