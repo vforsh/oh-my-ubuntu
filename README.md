@@ -106,7 +106,7 @@ The script sets up the following aliases for eza:
 The script adds convenient aliases for managing your bash configuration:
 
 - `ebc`: Edit your bashrc file (using nano)
-- `sfc`: Source your bashrc file to apply changes
+- `sbc`: Source your bashrc file to apply changes
 
 ## Bun Completions
 
@@ -124,6 +124,45 @@ Feel free to modify the script to add or remove tools based on your preferences.
 - Ubuntu (or Debian-based) system
 - Sudo privileges
 
-## License
+## Dokku Setup
 
-MIT 
+This repository includes a script to set up Dokku with Caddy as a reverse proxy on Ubuntu server.
+
+### Installation
+
+1. Clone this repository:
+```bash
+git clone https://github.com/yourusername/oh-my-ubuntu.git
+cd oh-my-ubuntu
+```
+
+2. Make the setup script executable:
+```bash
+chmod +x setup-dokku.sh
+```
+
+3. Run the setup script:
+```bash
+./setup-dokku.sh
+```
+
+The script will prompt you for:
+- Your domain name (e.g., example.com)
+- Your server's IP address
+- Email address for Let's Encrypt SSL certificates
+
+### What Gets Installed
+
+- Dokku v0.35.16
+- Caddy reverse proxy with automatic SSL via Let's Encrypt
+- SSH key configuration for deployment
+
+### Post-Installation
+
+After installation, you can deploy applications using Git:
+
+```bash
+# On your local machine
+git remote add dokku dokku@your-domain.com:app-name
+git push dokku main
+```
